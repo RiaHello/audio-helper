@@ -43,9 +43,12 @@ def _error_payload(request: Request, code: str, message: str, stage: str) -> dic
 
 
 def _stage_from_path(path: str) -> str:
-    if path.rstrip("/").endswith("/upload"):
+    normalized = path.rstrip("/")
+    if normalized.endswith("/upload"):
         return "upload"
-    if path.rstrip("/").endswith("/health"):
+    if normalized.endswith("/asr"):
+        return "asr"
+    if normalized.endswith("/health"):
         return "health"
     return "unknown"
 
@@ -64,7 +67,11 @@ async def validation_error_handler(
     exc: RequestValidationError,
 ) -> JSONResponse:
     stage = _stage_from_path(request.url.path)
-    message = "请求缺少文件字段 file，或字段类型不正确。" if stage == "upload" else "请求字段不正确。"
+    messages = {
+        "upload": "请求缺少文件字段 file，或字段类型不正确。",
+        "asr": "请求缺少 audio_id 字段，或字段类型不正确。",
+    }
+    message = messages.get(stage, "请求字段不正确。")
     return JSONResponse(
         status_code=422,
         content=_error_payload(request, "VALIDATION_ERROR", message, stage),

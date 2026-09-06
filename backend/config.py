@@ -41,6 +41,8 @@ class Settings(BaseSettings):
     min_audio_seconds: float = 1.0
     max_audio_seconds: float = 60.0
     audio_ttl_hours: int = 24
+    asr_timeout_seconds: float = 25.0
+    max_asr_base64_bytes: int = 10 * 1024 * 1024
 
     @property
     def cors_origin_list(self) -> list[str]:

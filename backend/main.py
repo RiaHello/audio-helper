@@ -48,6 +48,8 @@ def _stage_from_path(path: str) -> str:
         return "upload"
     if normalized.endswith("/asr"):
         return "asr"
+    if normalized.endswith("/extract"):
+        return "extract"
     if normalized.endswith("/health"):
         return "health"
     return "unknown"
@@ -70,6 +72,7 @@ async def validation_error_handler(
     messages = {
         "upload": "请求缺少文件字段 file，或字段类型不正确。",
         "asr": "请求缺少 audio_id 字段，或字段类型不正确。",
+        "extract": "请求缺少 text 或 city 字段，或字段类型不正确。",
     }
     message = messages.get(stage, "请求字段不正确。")
     return JSONResponse(

@@ -37,9 +37,26 @@ class Settings(BaseSettings):
     amap_geo_url: str = "https://restapi.amap.com/v3/geocode/geo"
     amap_around_url: str = "https://restapi.amap.com/v3/place/around"
 
+    max_audio_bytes: int = 5 * 1024 * 1024
+    min_audio_seconds: float = 1.0
+    max_audio_seconds: float = 60.0
+    audio_ttl_hours: int = 24
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @property
+    def storage_dir(self) -> Path:
+        return BACKEND_DIR / "storage"
+
+    @property
+    def audio_dir(self) -> Path:
+        return self.storage_dir / "audio"
+
+    @property
+    def tmp_dir(self) -> Path:
+        return self.storage_dir / "tmp"
 
 
 settings = Settings()

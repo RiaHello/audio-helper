@@ -41,10 +41,18 @@ class Settings(BaseSettings):
     min_audio_seconds: float = 1.0
     max_audio_seconds: float = 60.0
     audio_ttl_hours: int = 24
+    asr_timeout_seconds: float = 25.0
+    max_asr_base64_bytes: int = 10 * 1024 * 1024
+    extract_timeout_seconds: float = 12.0
+    extract_max_tokens: int = 800
 
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @property
+    def backend_dir(self) -> Path:
+        return BACKEND_DIR
 
     @property
     def storage_dir(self) -> Path:
